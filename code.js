@@ -24,6 +24,15 @@ function initializeGrids(){
     }
 }
 
+function randomGrids(){
+    for(var i=0; i< rows; i++){
+        for (var j=0; j< cols; j++){
+            grid[i][j] =  Math.floor(Math.random() * 2);
+        }
+    }
+}
+
+
 function resetGrids(){
     for(var i=0; i< rows; i++){
         for (var j=0; j< cols; j++){
@@ -105,7 +114,17 @@ startButton.onclick = startButtonHandler;
 //button to clear selection
 var clearButtton = document.getElementById("clear");
 clearButtton.onclick = clearButttonHandler;
+
+var randomButton = document.getElementById("random");
+randomButton.onclick = randomButttonHandler;
 }
+
+function randomButttonHandler(){
+    console.log("random game");
+    randomGrids();
+    updateView();
+}
+
 
 function startButtonHandler(){
     if(playing){
@@ -218,3 +237,8 @@ function countNeighbors(row, col){
     return count;
 }
 
+
+
+
+//start everything
+window.onload = initialize;
