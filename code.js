@@ -5,6 +5,9 @@ var playing = false;
 var grid = new Array(rows);
 var nextGrid = new Array(rows);
 
+var timer;
+var reproductionTime = 100;
+
 //inicialize
 function initialize(){
     createTable();
@@ -105,18 +108,54 @@ clearButtton.onclick = clearButttonHandler;
 }
 
 function startButtonHandler(){
-    play();
+    if(playing){
+        console.log("Pause the game");
+        playing = false;
+        this.innerHTML = "continue";
+        clearTimeout(timer);
+    }else{
+        console.log("continue the game");
+        playing = true
+        this.innerHTML = "pause";
+        play();
+    }
 }
 
 function clearButttonHandler(){
-    console.log("TODO");
+    console.log("Clear the game: stop playing, clear the grid");
+    playing = false;
+    var startButton = document.getElementById("start");
+    startButton.innerHTML = "start";
+
+    clearTimeout(timer);
+
+    var cellslist = document.getElementsByClassName("live");
+    var cells = [];
+
+    for(var i = 0 ; i < cellslist.length; i++){
+        cells.push(cellslist[i]);    
+    }
+
+    for(i=0; i< cells.length; i++){
+        cells[i].setAttribute("class", "dead");
+    }
+
+
+    resetGrids();
 }
 
 function play(){
     console.log("Play the game");
     computeNextGen();
+
+    if(playing){
+        timer = setTimeout(play, reproductionTime);
+    }
+
 }
 
+
+//run next life game
 function computeNextGen(){
     for(var i=0; i< rows; i++){
         for (var j=0; j<cols; j++){
@@ -127,11 +166,12 @@ function computeNextGen(){
     copyAndResetGrid();
     //copy all 1 value to "live" in the table
     updateView();
+
 }
+
 //Any live cell with two or three live neighbours lives on to the next generation of
 //Any live cell with more than three live neighbourds dies, as if by overcrowing.
 //Any dead cell with exactly three live nbeighbours becomes a live cell, as if by reproduction
-
 function applyRules(row, col){
     var numNeighbors = countNeighbors(row, col);
     if(grid[row][col] == 1){
@@ -177,10 +217,4 @@ function countNeighbors(row, col){
     }
     return count;
 }
-
-
-
-
-//start everything
-window.onload = initialize;
 
