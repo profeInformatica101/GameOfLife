@@ -30,6 +30,15 @@ function resetGrids(){
     }
 }
 
+function copyAndResetGrid(){
+    for(var i=0; i<rows; i++){
+        for(var j=0; j< cols; j++){
+            grid[i][j] = nextGrid[i][j];
+            nextGrid[i][j]=0;
+        }
+    }
+}
+
 //lay out your board
 function createTable(){
     var gridContainer = document.getElementById("gridContainer");
@@ -71,6 +80,20 @@ function cellClickHandler(){
     }
 }
 
+function updateView(){
+    for(var i=0; i<rows; i++){
+        for(var j=0; j<cols; j++){
+            var cell = document.getElementById(i+"_"+j);
+            if(grid[i][j] ==  0){
+                cell.setAttribute("class", "dead"); 
+            }else{
+                cell.setAttribute("class", "live");
+            }
+        }
+    }
+}
+
+
 function setupControlButtons(){
 //button to start 
 var startButton = document.getElementById("start");
@@ -82,7 +105,7 @@ clearButtton.onclick = clearButttonHandler;
 }
 
 function startButtonHandler(){
-    console.log("TODO");
+    play();
 }
 
 function clearButttonHandler(){
@@ -100,6 +123,10 @@ function computeNextGen(){
             applyRules(i,j);
         }
     }
+    //copy nextGrid to grid, and reset nextGrid
+    copyAndResetGrid();
+    //copy all 1 value to "live" in the table
+    updateView();
 }
 //Any live cell with two or three live neighbours lives on to the next generation of
 //Any live cell with more than three live neighbourds dies, as if by overcrowing.
@@ -156,3 +183,4 @@ function countNeighbors(row, col){
 
 //start everything
 window.onload = initialize;
+
